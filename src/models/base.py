@@ -1,19 +1,19 @@
-""" Abstract base class for all models """
+"""
+Abstract base class for all models
+"""
 
 from datetime import datetime
 from typing import Any, Optional
 import uuid
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from src import db
 
+class Base(db.Model):
+    __abstract__ = True  # This prevents SQLAlchemy from creating a table for this class
 
-class Base(ABC):
-    """
-    Base Interface for all models
-    """
-
-    id: str
-    created_at: datetime
-    updated_at: datetime
+    id = db.Column(db.String(36), primary_key=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.current_timestamp())
 
     def __init__(
         self,
@@ -26,6 +26,7 @@ class Base(ABC):
         Base class constructor
         If kwargs are provided, set them as attributes
         """
+        super().__init__(**kwargs)
 
         if kwargs:
             for key, value in kwargs.items():
@@ -40,15 +41,13 @@ class Base(ABC):
     @classmethod
     def get(cls, id) -> "Any | None":
         """
-        This is a common method to get an specific object
+        This is a common method to get a specific object
         of a class by its id
 
         If a class needs a different implementation,
         it should override this method
         """
-        from src.persistence import repo
-
-        return repo.get(cls.__name__.lower(), id)
+        return cls.query.get(id)
 
     @classmethod
     def get_all(cls) -> list["Any"]:
@@ -58,27 +57,23 @@ class Base(ABC):
         If a class needs a different implementation,
         it should override this method
         """
-        from src.persistence import repo
-
-        return repo.get_all(cls.__name__.lower())
+        return cls.query.all()
 
     @classmethod
     def delete(cls, id) -> bool:
         """
-        This is a common method to delete an specific
+        This is a common method to delete a specific
         object of a class by its id
 
         If a class needs a different implementation,
         it should override this method
         """
-        from src.persistence import repo
-
         obj = cls.get(id)
-
         if not obj:
             return False
-
-        return repo.delete(obj)
+        db.session.delete(obj)
+        db.session.commit()
+        return True
 
     @abstractmethod
     def to_dict(self) -> dict:
