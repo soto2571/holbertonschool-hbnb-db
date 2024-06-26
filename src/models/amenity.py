@@ -1,5 +1,5 @@
 """
-Amenity related functionality
+Amenity model for the application.
 """
 
 from src.models.base import Base

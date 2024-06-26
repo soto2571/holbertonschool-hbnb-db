@@ -10,8 +10,11 @@ users_bp = Blueprint('users', __name__, url_prefix='/api/users')
 @users_bp.route('', methods=['POST'])
 def create_user():
     user_data = request.get_json()
-    new_user = User.create(user_data)
-    return jsonify(new_user.to_dict()), 201
+    try:
+        new_user = User.create(user_data)
+        return jsonify(new_user.to_dict()), 201
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
 @users_bp.route('', methods=['GET'])
 def get_users():

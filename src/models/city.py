@@ -56,4 +56,3 @@ class City(Base):
 
         repo.update(city)
         return city
-

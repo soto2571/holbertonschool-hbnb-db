@@ -1,5 +1,3 @@
-# src/__init__.py
-
 """ Initialize the Flask app. """
 
 from flask import Flask
@@ -11,7 +9,7 @@ from src.config import config_by_name
 
 cors = CORS()
 db = SQLAlchemy()
-migrate = Migrate()  # Add this line
+migrate = Migrate()
 
 def create_app(config_name=None) -> Flask:
     """
@@ -39,13 +37,10 @@ def register_extensions(app: Flask) -> None:
     """Register the extensions for the Flask app"""
     cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
-    migrate.init_app(app, db)  # Add this line
-    # Further extensions can be added here
+    migrate.init_app(app, db)
 
 def register_routes(app: Flask) -> None:
     """Import and register the routes for the Flask app"""
-
-    # Import the routes here to avoid circular imports
     from src.routes.users import users_bp
     from src.routes.countries import countries_bp
     from src.routes.cities import cities_bp
@@ -53,7 +48,6 @@ def register_routes(app: Flask) -> None:
     from src.routes.amenities import amenities_bp
     from src.routes.reviews import reviews_bp
 
-    # Register the blueprints in the app
     app.register_blueprint(users_bp)
     app.register_blueprint(countries_bp)
     app.register_blueprint(cities_bp)

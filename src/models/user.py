@@ -2,7 +2,7 @@
 User model for the application
 """
 
-from typing import Any, Optional
+from typing import Any
 from src import db
 from src.models.base import Base
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -35,6 +35,11 @@ class User(Base):
 
     @staticmethod
     def create(data: dict) -> Any:
+        # Check if a user with the same email already exists
+        existing_user = User.query.filter_by(email=data.get("email")).first()
+        if existing_user:
+            raise ValueError("A user with this email already exists.")
+
         user = User(
             email=data.get("email"),
             first_name=data.get("first_name"),
