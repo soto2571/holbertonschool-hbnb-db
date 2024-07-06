@@ -1,16 +1,36 @@
-FROM python:3.12.3-slim
+# Use an official Python runtime as a parent image
+FROM python:3.8-alpine
 
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV FLASK_APP=src
+ENV FLASK_ENV=production
+
+# Install dependencies
+RUN apk add --no-cache \
+    postgresql-dev \
+    gcc \
+    python3-dev \
+    musl-dev \
+    libffi-dev \
+    openssl-dev \
+    build-base \
+    linux-headers
+
+# Set work directory
 WORKDIR /app
 
-COPY requirements.txt /tmp/requirements.txt
+# Copy application files
+COPY . /app
 
-RUN pip install --no-cache-dir -r /tmp/requirements.txt \
-  && rm -rf /tmp
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copy .env file
+COPY .env /app/.env
 
-ENV PORT 5000
+# Expose port
+EXPOSE 5000
 
-EXPOSE $PORT
-
-CMD gunicorn hbnb:app -w 2 -b 0.0.0.0:$PORT
+# Command to run the application
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "src:app"]

@@ -2,6 +2,7 @@ import unittest
 from src import create_app, db
 from src.models.user import User
 
+
 class UserModelTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app('testing')
@@ -38,6 +39,7 @@ class UserModelTestCase(unittest.TestCase):
                 "last_name": "Test",
                 "password": "password"
             })
+
 
 if __name__ == '__main__':
     unittest.main()

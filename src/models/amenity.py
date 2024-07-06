@@ -5,6 +5,7 @@ Amenity model for the application.
 from src.models.base import Base
 from src import db
 
+
 class Amenity(Base):
     __tablename__ = 'amenities'
     name = db.Column(db.String(120), nullable=False)

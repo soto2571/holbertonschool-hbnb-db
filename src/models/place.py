@@ -5,14 +5,27 @@ Place related functionality
 from src.models.base import Base
 from src import db
 
+
 class Place(Base):
     __tablename__ = 'places'
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    city_id = db.Column(db.String(36), db.ForeignKey('cities.id'), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    city_id = db.Column(
+        db.String(36),
+        db.ForeignKey('cities.id'),
+        nullable=False)
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey('users.id'),
+        nullable=False)
 
-    def __init__(self, name: str, city_id: str, user_id: str, description: str = "", **kw):
+    def __init__(
+            self,
+            name: str,
+            city_id: str,
+            user_id: str,
+            description: str = "",
+            **kw):
         """Initialize a new place"""
         super().__init__(**kw)
         self.name = name

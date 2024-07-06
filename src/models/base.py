@@ -8,8 +8,9 @@ import uuid
 from abc import abstractmethod
 from src import db
 
+
 class Base(db.Model):
-    __abstract__ = True  # This prevents SQLAlchemy from creating a table for this class
+    __abstract__ = True  # This prevents SQLAlchemy from creating
 
     id = db.Column(db.String(36), primary_key=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())

@@ -25,26 +25,25 @@ class TestDocumentation(unittest.TestCase):
         """Check if all modules, classes, functions, and methods have docstrings."""
         if isinstance(node, ast.Module):
             self.assertIsNotNone(
-                ast.get_docstring(node), f"Module {file_path} is missing a docstring"
-            )
+                ast.get_docstring(node),
+                f"Module {file_path} is missing a docstring")
 
         for child in ast.iter_child_nodes(node):
             if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 self.assertIsNotNone(
-                    ast.get_docstring(child),
-                    f"Function {child.name} in {file_path} is missing a docstring",
-                )
+                    ast.get_docstring(child), f"Function {
+                        child.name} in {file_path} is missing a docstring", )
             elif isinstance(child, ast.ClassDef):
                 self.assertIsNotNone(
-                    ast.get_docstring(child),
-                    f"Class {child.name} in {file_path} is missing a docstring",
-                )
+                    ast.get_docstring(child), f"Class {
+                        child.name} in {file_path} is missing a docstring", )
                 for class_child in child.body:
-                    if isinstance(class_child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    if isinstance(
+                            class_child, (ast.FunctionDef, ast.AsyncFunctionDef)):
                         self.assertIsNotNone(
-                            ast.get_docstring(class_child),
-                            f"Method {class_child.name} in class {child.name} in {file_path} is missing a docstring",
-                        )
+                            ast.get_docstring(class_child), f"Method {
+                                class_child.name} in class {
+                                child.name} in {file_path} is missing a docstring", )
             self.check_docstrings(child, file_path)
 
     def test_pep8_compliance(self):

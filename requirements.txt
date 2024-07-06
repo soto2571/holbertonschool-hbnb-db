@@ -1,5 +1,9 @@
 flask
 flask-cors
 gunicorn
-SQLALchemy
-Flask-SQLALchemy
+SQLAlchemy
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-JWT-Extended
+python-dotenv
+psycopg2-binary

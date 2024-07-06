@@ -1,15 +1,30 @@
 """ Initialize the Flask app. """
 
+from dotenv import load_dotenv
+import os
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-import os
+from flask_jwt_extended import JWTManager
 from src.config import config_by_name
+
+# Load environment variables from .env file
+load_dotenv()
 
 cors = CORS()
 db = SQLAlchemy()
 migrate = Migrate()
+jwt = JWTManager()
+
+# Ensure the app is configured and SQLAlchemy is initialized before importing models
+import src.models.base
+import src.models.amenity
+import src.models.city
+import src.models.country
+import src.models.place
+import src.models.review
+import src.models.user
 
 def create_app(config_name=None) -> Flask:
     """
@@ -21,7 +36,7 @@ def create_app(config_name=None) -> Flask:
 
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'development')
-    
+
     app.config.from_object(config_by_name[config_name])
 
     print(f"Running with configuration: {config_name}")
@@ -33,14 +48,17 @@ def create_app(config_name=None) -> Flask:
 
     return app
 
+
 def register_extensions(app: Flask) -> None:
-    """Register the extensions for the Flask app"""
+    """Register the extensions for the Flask app."""
     cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
+
 
 def register_routes(app: Flask) -> None:
-    """Import and register the routes for the Flask app"""
+    """Import and register the routes for the Flask app."""
     from src.routes.users import users_bp
     from src.routes.countries import countries_bp
     from src.routes.cities import cities_bp
@@ -55,6 +73,7 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(reviews_bp)
     app.register_blueprint(amenities_bp)
 
+
 def register_handlers(app: Flask) -> None:
     """Register the error handlers for the Flask app."""
     app.errorhandler(404)(lambda e: (
@@ -66,14 +85,6 @@ def register_handlers(app: Flask) -> None:
         )
     )
 
-# Ensure the app is configured and SQLAlchemy is initialized before importing models
-import src.models.user
-import src.models.review
-import src.models.place
-import src.models.country
-import src.models.city
-import src.models.amenity
-import src.models.base
 
 if __name__ == "__main__":
     app = create_app()

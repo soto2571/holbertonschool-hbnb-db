@@ -1,4 +1,4 @@
-#!/home/soto2571/projects/holbertonschool-hbnb-db/venv/bin/python3
+#!/Users/soto2571/Projects/holbertonschool-hbnb-db/venv/bin/python3.12
 # -*- coding: utf-8 -*-
 import re
 import sys

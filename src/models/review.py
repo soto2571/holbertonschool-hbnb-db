@@ -5,11 +5,18 @@ Review related functionality
 from src.models.base import Base
 from src import db
 
+
 class Review(Base):
     __tablename__ = 'reviews'
     text = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
-    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey('users.id'),
+        nullable=False)
+    place_id = db.Column(
+        db.String(36),
+        db.ForeignKey('places.id'),
+        nullable=False)
 
     def __init__(self, text: str, user_id: str, place_id: str, **kw):
         """Initialize a new review"""
@@ -20,7 +27,10 @@ class Review(Base):
 
     def __repr__(self) -> str:
         """String representation of the review"""
-        return f"<Review {self.id} (User: {self.user_id}, Place: {self.place_id})>"
+        return f"<Review {
+            self.id} (User: {
+            self.user_id}, Place: {
+            self.place_id})>"
 
     def to_dict(self) -> dict:
         """Dictionary representation of the review"""
